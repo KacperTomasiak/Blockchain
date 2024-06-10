@@ -1,0 +1,24 @@
+{
+  "name": "blockchain",
+  "version": "1.0.0",
+  "description": "A simple blockchain implementation",
+  "keywords": [
+    "privacy",
+    "blockchain"
+  ],
+  "scripts": {
+    "blockchain": "cd blockchain \n node main.js",
+    "explorer": "cd explorer \n node server.js",
+    "start": "concurrently \"npm run blockchain\" \"npm run explorer\""
+  },
+  "author": "Kacper Tomasiak",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^20.11.19",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "eciesjs": "^0.4.6",
+    "elliptic": "^6.5.4",
+    "express": "^4.18.2"
+  }
+}
