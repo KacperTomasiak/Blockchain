@@ -32,33 +32,38 @@ export class Block {
 }
 
 export class Blockchain {
-  public static transactions: Transaction[] = [];
+  transactions: Transaction[] = [];
   blockchain: Block[] = [];
+
+  get chain() {
+    return this.blockchain;
+  }
 
   get lastBlock() {
     return this.blockchain[this.blockchain.length - 1];
   }
 
-  public static addToQueue(transaction: Transaction): void {
-    Blockchain.transactions.push(transaction);
+  public addToQueue(transaction: Transaction): void {
+    this.transactions.push(transaction);
   }
 
   public clearQueue(): void {
-    Blockchain.transactions = [];
+    this.transactions = [];
   }
 
-  public addBlock(transactions: Transaction[]): void {
+  public addBlock(): void {
     const verifier = crypto.createVerify("SHA256");
-    verifier.update(transactions.toString());
+    verifier.update(this.transactions.toString());
     const previousHash =
       this.blockchain.length > 0 ? this.lastBlock.blockHash : "";
     const nonce = this.blockchain.length > 0 ? this.lastBlock.nonce + 1 : 0;
-    const newBlock = new Block(nonce, previousHash, transactions);
-    Blockchain.verify(newBlock.nonce);
+    const newBlock = new Block(nonce, previousHash, this.transactions);
+    this.verify(newBlock.nonce);
     this.blockchain.push(newBlock);
+    this.clearQueue();
   }
 
-  public static verify(nonce: number): number {
+  public verify(nonce: number): number {
     let solution = Math.floor(Math.random() * 10);
 
     while (true) {

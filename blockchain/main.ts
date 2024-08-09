@@ -1,8 +1,10 @@
 import { Blockchain } from "./blockchain";
 import { Wallet } from "./wallet";
 import { Message } from "./message";
+import { Tools } from "./tools";
+import * as fs from "fs";
 
-export const blockchain = new Blockchain();
+const blockchain: Blockchain = Tools.restoreBlockchain();
 
 const wallets: Wallet[] = [
   new Wallet(),
@@ -24,7 +26,7 @@ function generateRandomText(): string {
   return text;
 }
 
-setInterval(() => {
+function startBlockchain(): void {
   const randomAmount: number = Number((Math.random() * 100).toFixed(8));
   const randomMessage: string = generateRandomText();
   const app: string = generateRandomText();
@@ -32,15 +34,17 @@ setInterval(() => {
   const walletTwo: Wallet = wallets[Math.floor(Math.random() * wallets.length)];
   const message: Message = new Message(randomMessage);
 
-  walletOne.transfer(randomAmount, walletTwo.publicKey);
-  walletOne.sign(app);
+  walletOne.transfer(blockchain, randomAmount, walletTwo.publicKey);
+  walletOne.sign(blockchain, app);
   message.encryptMessage(walletOne.publicKey);
   console.log(`Encrypted message: ${message.text}`);
-  walletTwo.sendMessage(message, walletOne.publicKey);
+  walletTwo.sendMessage(blockchain, message, walletOne.publicKey);
   message.decryptMessage(walletOne.privateKey);
   console.log(`Decrypted message: ${message.text}`);
-  walletOne.revoke(app);
+  walletOne.revoke(blockchain, app);
 
-  blockchain.addBlock(Blockchain.transactions);
-  blockchain.clearQueue();
-}, 2000);
+  blockchain.addBlock();
+  fs.writeFileSync("blockchain.txt", JSON.stringify(blockchain));
+}
+
+setInterval(startBlockchain, 2000);

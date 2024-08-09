@@ -1,34 +1,40 @@
 import { Blockchain, Transaction } from "../../blockchain/blockchain";
-import { blockchain } from "../../blockchain/main";
+import { Tools } from "../../blockchain/tools";
 
-export const getBlockchain = (): Blockchain => {
-  return blockchain;
+export const getBlockchain = (): any => {
+  let blockchainCopy: Blockchain = Tools.restoreBlockchain();
+
+  return blockchainCopy;
 };
 
 export const getBlock = (arg: string): any => {
+  let blockchainCopy: Blockchain = Tools.restoreBlockchain();
+
   if (/[abcdef]/.test(arg)) {
-    for (let i: number = 0; i < blockchain.blockchain.length; i++) {
-      if (blockchain.blockchain[i].blockHash == arg) {
-        return blockchain.blockchain[i];
+    for (let i: number = 0; i < blockchainCopy.blockchain.length; i++) {
+      if (blockchainCopy.blockchain[i].blockHash == arg) {
+        return blockchainCopy.blockchain[i];
       }
     }
   } else {
-    return blockchain.blockchain[parseInt(arg)];
+    return blockchainCopy.blockchain[parseInt(arg)];
   }
 
   return {};
 };
 
 export const getTransaction = (arg: string): any => {
-  for (let i: number = 0; i < blockchain.blockchain.length; i++) {
+  let blockchainCopy: Blockchain = Tools.restoreBlockchain();
+
+  for (let i: number = 0; i < blockchainCopy.blockchain.length; i++) {
     for (
       let j: number = 0;
-      j < blockchain.blockchain[i].transactions.length;
+      j < blockchainCopy.blockchain[i].transactions.length;
       j++
     ) {
-      const txid = blockchain.blockchain[i].transactions[j].txid;
+      const txid = blockchainCopy.blockchain[i].transactions[j].txid;
       if (txid == arg) {
-        return blockchain.blockchain[i].transactions[j];
+        return blockchainCopy.blockchain[i].transactions[j];
       }
     }
   }
@@ -37,16 +43,17 @@ export const getTransaction = (arg: string): any => {
 };
 
 export const getAddressTransactions = (arg: string): any => {
+  let blockchainCopy: Blockchain = Tools.restoreBlockchain();
   let transactions: Transaction[] = [];
 
-  for (let i: number = 0; i < blockchain.blockchain.length; i++) {
+  for (let i: number = 0; i < blockchainCopy.blockchain.length; i++) {
     for (
       let j: number = 0;
-      j < blockchain.blockchain[i].transactions.length;
+      j < blockchainCopy.blockchain[i].transactions.length;
       j++
     ) {
-      if (blockchain.blockchain[i].transactions[j].destination == arg) {
-        transactions.push(blockchain.blockchain[i].transactions[j]);
+      if (blockchainCopy.blockchain[i].transactions[j].destination == arg) {
+        transactions.push(blockchainCopy.blockchain[i].transactions[j]);
       }
     }
   }

@@ -1,8 +1,6 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"rootDirs": ["./explorer", "./blockchain"],
-		"target": "ES6"
-	},
-	"exclude": ["node_modules"]
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES6"
+  }
 }
